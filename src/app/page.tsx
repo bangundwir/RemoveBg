@@ -7,11 +7,15 @@ import { removeBackground } from '../utils/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { Toaster } from "@/components/ui/toaster"
+import { useToast } from "@/components/ui/use-toast"
 
 export default function Home() {
   const [processedImages, setProcessedImages] = useState<Array<{src: string, date: Date}>>([]);
   const [processingCount, setProcessingCount] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { toast } = useToast()
 
   const processFiles = async (files: File[]) => {
     setProcessingCount(prev => prev + files.length);
@@ -20,8 +24,17 @@ export default function Home() {
       try {
         const processedImage = await removeBackground(file, () => {});
         setProcessedImages(prev => [...prev, { src: processedImage, date: new Date() }]);
+        toast({
+          title: "Image processed successfully",
+          description: `${file.name} has been processed.`,
+        })
       } catch (error) {
         console.error('Error processing image:', error);
+        toast({
+          title: "Error processing image",
+          description: `Failed to process ${file.name}.`,
+          variant: "destructive",
+        })
       } finally {
         setProcessingCount(prev => prev - 1);
       }
@@ -94,6 +107,7 @@ export default function Home() {
           </motion.div>
         </motion.main>
       </AnimatePresence>
+      <Toaster />
     </div>
   );
 }

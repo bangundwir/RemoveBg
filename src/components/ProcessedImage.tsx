@@ -4,6 +4,7 @@ import ImagePreview from './ImagePreview';
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { FiCopy, FiDownload, FiMaximize2 } from 'react-icons/fi';
+import { useToast } from "@/components/ui/use-toast";
 
 interface ProcessedImageProps {
   src: string;
@@ -12,6 +13,7 @@ interface ProcessedImageProps {
 
 const ProcessedImage: React.FC<ProcessedImageProps> = ({ src, date }) => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const { toast } = useToast();
 
   const handleCopy = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -23,12 +25,25 @@ const ProcessedImage: React.FC<ProcessedImageProps> = ({ src, date }) => {
           [blob.type]: blob
         })
       ]);
-      alert('Image copied to clipboard!');
+      toast({
+        title: "Image copied",
+        description: "Image has been copied to clipboard.",
+      })
     } catch (err) {
       console.error('Failed to copy image: ', err);
       navigator.clipboard.writeText(src)
-        .then(() => alert('Image URL copied to clipboard (image copy not supported in this browser)'))
-        .catch(err => console.error('Failed to copy URL: ', err));
+        .then(() => toast({
+          title: "URL copied",
+          description: "Image URL has been copied to clipboard.",
+        }))
+        .catch(err => {
+          console.error('Failed to copy URL: ', err);
+          toast({
+            title: "Copy failed",
+            description: "Failed to copy image or URL.",
+            variant: "destructive",
+          })
+        });
     }
   };
 
