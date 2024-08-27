@@ -12,7 +12,7 @@ import { useToast } from "@/components/ui/use-toast"
 import ColorPicker from '../components/ColorPicker';
 
 export default function Home() {
-  const [processedImages, setProcessedImages] = useState<Array<{src: string, date: Date}>>([]);
+  const [processedImages, setProcessedImages] = useState<Array<{src: string, date: Date, fileName: string}>>([]);
   const [processingCount, setProcessingCount] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [backgroundColor, setBackgroundColor] = useState('#111827'); // Default dark gray
@@ -25,7 +25,7 @@ export default function Home() {
     for (const file of files) {
       try {
         const processedImage = await removeBackground(file, () => {});
-        setProcessedImages(prev => [...prev, { src: processedImage, date: new Date() }]);
+        setProcessedImages(prev => [...prev, { src: processedImage, date: new Date(), fileName: file.name }]);
         toast({
           title: "Image processed successfully",
           description: `${file.name} has been processed.`,

@@ -10,9 +10,10 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 interface ProcessedImageProps {
   src: string;
   date: Date;
+  fileName: string;
 }
 
-const ProcessedImage: React.FC<ProcessedImageProps> = ({ src, date }) => {
+const ProcessedImage: React.FC<ProcessedImageProps> = ({ src, date, fileName }) => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [backgroundColor, setBackgroundColor] = useState('transparent');
   const { toast } = useToast();
@@ -117,7 +118,7 @@ const ProcessedImage: React.FC<ProcessedImageProps> = ({ src, date }) => {
           <CardContent className="p-0 h-full" style={{ backgroundColor }}>
             <img
               src={src}
-              alt="Processed image"
+              alt={fileName}
               className="w-full h-full object-contain"
             />
             <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-2">
@@ -151,11 +152,9 @@ const ProcessedImage: React.FC<ProcessedImageProps> = ({ src, date }) => {
                   </PopoverContent>
                 </Popover>
               </div>
-              <div className="flex justify-between items-center">
+              <div className="flex flex-col">
+                <span className="text-xs text-white truncate">{fileName}</span>
                 <span className="text-xs text-white">{date.toLocaleString()}</span>
-                <Button size="icon" variant="ghost" onClick={() => setIsPreviewOpen(true)}>
-                  <FiMaximize2 className="h-4 w-4" />
-                </Button>
               </div>
             </div>
           </CardContent>
