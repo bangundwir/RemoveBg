@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { TransformWrapper, TransformComponent, useControls } from 'react-zoom-pan-pinch';
-import { FiZoomIn, FiZoomOut, FiRotateCcw, FiMaximize, FiMinimize } from 'react-icons/fi';
+import { FiZoomIn, FiZoomOut, FiRotateCcw, FiMaximize, FiMinimize, FiX } from 'react-icons/fi';
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardFooter } from "@/components/ui/card"
 
 interface ImagePreviewProps {
   src: string;
@@ -14,30 +16,15 @@ const ZoomControls = () => {
   const { zoomIn, zoomOut, resetTransform } = useControls();
   return (
     <div className="absolute top-2 left-2 z-10 flex space-x-2">
-      <motion.button
-        className="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition-colors"
-        onClick={() => zoomIn()}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-      >
-        <FiZoomIn />
-      </motion.button>
-      <motion.button
-        className="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition-colors"
-        onClick={() => zoomOut()}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-      >
-        <FiZoomOut />
-      </motion.button>
-      <motion.button
-        className="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition-colors"
-        onClick={() => resetTransform()}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-      >
-        <FiRotateCcw />
-      </motion.button>
+      <Button variant="outline" size="icon" onClick={() => zoomIn()}>
+        <FiZoomIn className="h-4 w-4" />
+      </Button>
+      <Button variant="outline" size="icon" onClick={() => zoomOut()}>
+        <FiZoomOut className="h-4 w-4" />
+      </Button>
+      <Button variant="outline" size="icon" onClick={() => resetTransform()}>
+        <FiRotateCcw className="h-4 w-4" />
+      </Button>
     </div>
   );
 };
@@ -78,76 +65,50 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({ src, onClose, onCopy, onDow
   };
 
   return (
-    <motion.div
-      className="bg-gray-800 bg-opacity-90 backdrop-blur-md rounded-lg overflow-hidden w-full max-w-4xl max-h-[90vh] flex flex-col"
-      initial={{ scale: 0.8, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      exit={{ scale: 0.8, opacity: 0 }}
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+    <Card
+      className="bg-gray-800 bg-opacity-90 backdrop-blur-md w-full max-w-4xl max-h-[90vh] flex flex-col"
       onClick={(e) => e.stopPropagation()}
     >
-      <TransformWrapper
-        initialScale={1}
-        minScale={0.5}
-        maxScale={3}
-        centerOnInit={true}
-      >
-        {() => (
-          <>
-            <ZoomControls />
-            <TransformComponent wrapperClass="!w-full !h-[calc(90vh-150px)]" contentClass="!w-full !h-full">
-              <img
-                src={src}
-                alt="Preview"
-                className="max-w-full max-h-full object-contain"
-              />
-            </TransformComponent>
-          </>
-        )}
-      </TransformWrapper>
-      <motion.div 
-        className="p-4 flex justify-between items-center flex-wrap gap-2 bg-gray-900 bg-opacity-50"
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2 }}
-      >
+      <CardContent className="p-0 flex-grow relative">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute top-2 right-2 z-10"
+          onClick={onClose}
+        >
+          <FiX className="h-6 w-6" />
+        </Button>
+        <TransformWrapper
+          initialScale={1}
+          minScale={0.5}
+          maxScale={3}
+          centerOnInit={true}
+        >
+          {() => (
+            <>
+              <ZoomControls />
+              <TransformComponent wrapperClass="!w-full !h-[calc(90vh-150px)]" contentClass="!w-full !h-full">
+                <img
+                  src={src}
+                  alt="Preview"
+                  className="max-w-full max-h-full object-contain"
+                />
+              </TransformComponent>
+            </>
+          )}
+        </TransformWrapper>
+      </CardContent>
+      <CardFooter className="p-4 flex justify-between items-center flex-wrap gap-2 bg-gray-900 bg-opacity-50">
         <div className="text-sm text-gray-300">File size: {fileSize}</div>
         <div className="flex space-x-2">
-          <motion.button
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
-            onClick={onCopy}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Copy Image
-          </motion.button>
-          <motion.button
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
-            onClick={onDownload}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Download Image
-          </motion.button>
-          <motion.button
-            className="bg-purple-500 text-white p-2 rounded-full hover:bg-purple-600 transition-colors"
-            onClick={toggleFullscreen}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            {isFullscreen ? <FiMinimize /> : <FiMaximize />}
-          </motion.button>
+          <Button onClick={onCopy}>Copy Image</Button>
+          <Button onClick={onDownload}>Download Image</Button>
+          <Button variant="outline" size="icon" onClick={toggleFullscreen}>
+            {isFullscreen ? <FiMinimize className="h-4 w-4" /> : <FiMaximize className="h-4 w-4" />}
+          </Button>
         </div>
-        <motion.button
-          className="bg-red-500 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-red-600 transition-colors"
-          onClick={onClose}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-        >
-          X
-        </motion.button>
-      </motion.div>
-    </motion.div>
+      </CardFooter>
+    </Card>
   );
 };
 
