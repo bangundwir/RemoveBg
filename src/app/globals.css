@@ -3,31 +3,86 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 17, 24, 39;
+  --background-end-rgb: 13, 17, 23;
+  --accent-color: 59, 130, 246;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+    to bottom,
+    rgb(var(--background-start-rgb)),
+    rgb(var(--background-end-rgb))
+  );
+  min-height: 100vh;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+.container {
+  @apply max-w-6xl mx-auto px-4;
+}
+
+.btn {
+  @apply px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300 font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5;
+}
+
+.btn-secondary {
+  @apply px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-all duration-300 font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5;
+}
+
+.card {
+  @apply bg-gray-800 rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl;
+}
+
+.input {
+  @apply w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300;
+}
+
+/* Dark mode specific styles */
+.dark {
+  @apply bg-gradient-to-b from-gray-900 to-gray-800 text-gray-100;
+}
+
+.dark .btn {
+  @apply bg-blue-500 hover:bg-blue-600;
+}
+
+.dark .btn-secondary {
+  @apply bg-gray-700 hover:bg-gray-600;
+}
+
+.dark input, .dark textarea {
+  @apply bg-gray-800 border-gray-700 text-white;
+}
+
+.dark ::placeholder {
+  @apply text-gray-400;
+}
+
+/* Custom utilities */
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500;
+}
+
+.bg-glass {
+  @apply bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
