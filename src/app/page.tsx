@@ -9,11 +9,13 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Toaster } from "@/components/ui/toaster"
 import { useToast } from "@/components/ui/use-toast"
+import ColorPicker from '../components/ColorPicker';
 
 export default function Home() {
   const [processedImages, setProcessedImages] = useState<Array<{src: string, date: Date}>>([]);
   const [processingCount, setProcessingCount] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [backgroundColor, setBackgroundColor] = useState('#111827'); // Default dark gray
 
   const { toast } = useToast()
 
@@ -57,8 +59,12 @@ export default function Home() {
     }
   };
 
+  const handleColorChange = (color: string) => {
+    setBackgroundColor(color);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-900 bg-opacity-90 bg-grid-pattern">
+    <div className="min-h-screen bg-grid-pattern" style={{ backgroundColor }}>
       <AnimatePresence>
         <motion.main
           className="container mx-auto px-4 py-12"
@@ -80,9 +86,12 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <Button className="w-full mb-6 text-lg py-6" onClick={handleFileSelect}>
-              Select Files
-            </Button>
+            <div className="mb-6 flex justify-between items-center">
+              <Button className="flex-grow mr-4 text-lg py-6" onClick={handleFileSelect}>
+                Select Files
+              </Button>
+              <ColorPicker onChange={handleColorChange} />
+            </div>
             <input
               type="file"
               ref={fileInputRef}
